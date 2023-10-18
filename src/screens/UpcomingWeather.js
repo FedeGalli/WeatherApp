@@ -1,6 +1,6 @@
 import React from "react";
-import {View, Text, SafeAreaView, StyleSheet, FlatList} from 'react-native'
-import { Feather } from '@expo/vector-icons'
+import {View, Text, SafeAreaView, StyleSheet, FlatList, StatusBar, ImageBackground} from 'react-native'
+import ListItem from "../components/ListItem";
 
 const DATA = [
     {
@@ -21,7 +21,8 @@ const DATA = [
           "humidity": 64,
           "sea_level": 1015,
           "grnd_level": 933
-        }
+        },
+        "key": 0
     },
     {
         "weather": [
@@ -41,7 +42,8 @@ const DATA = [
           "humidity": 12,
           "sea_level": 1015,
           "grnd_level": 933
-        }
+        },
+        "key": 1
     },
     {
         "weather": [
@@ -61,34 +63,42 @@ const DATA = [
           "humidity": 100,
           "sea_level": 1015,
           "grnd_level": 933
-        }
-    },
+        },
+        "key": 2
+    }
     
 ]
 
-const Item = (props) => {
-    const { humidity, min, max, condition} = props
-    return (
-        <View>
-            <Feather name={'sun'} size={50} color={'white'} />
-            <Text>{humidity}</Text>
-            <Text>{min}</Text>
-            <Text>{max}</Text>
-        </View>
-    )
-}
+const Empty = () => (
+  <View>
+    <Text>No data found</Text>
+  </View>
+)
 
 const UpcomingWeather = () => {
     const renderItem = ({item}) => (
-        <Item condition={item.weather[0].main} humidity={item.main.humidity} min={item.main.temp_min} max={item.main.temp_max} />
+        <ListItem 
+        condition={item.weather[0].main}
+        feelsLike={item.main.feels_like}
+        min={item.main.temp_min}
+        max={item.main.temp_max} />
     )
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Current Weather</Text>
-      <FlatList>
-        data={DATA}
-        renderItem={renderItem}
-      </FlatList>
+      <ImageBackground source={require('../../assets/clouds.jpg')} style={styles.image}>
+        <Text style={styles.title}>Upcoming Weather</Text>
+          <FlatList 
+            data={DATA} 
+            renderItem={renderItem} 
+            //ItemSeparatorComponent={() => <View style={{backgroundColor: 'red', height: 2}}></View>}
+            ListEmptyComponent={() => <Empty />}
+          />
+
+
+      </ImageBackground>
+
+      
+
     </SafeAreaView>
   )
 }
@@ -97,7 +107,17 @@ const UpcomingWeather = () => {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    alignItems: 'center'
+    marginTop: StatusBar.currentHeight || 0,
+    backgroundColor: '#33545C'
+  },
+  title: {
+    alignSelf: 'center',
+    fontSize: 30,
+    paddingBottom: 20,
+    color: '#D5F6FF'
+  },
+  image: {
+    flex: 1
   }
 })
 export default UpcomingWeather
