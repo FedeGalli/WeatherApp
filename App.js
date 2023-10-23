@@ -3,45 +3,28 @@ import { NavigationContainer} from '@react-navigation/native'
 import { StyleSheet, View } from "react-native";
 import Tabs from './src/components/Tabs'
 import { ActivityIndicator } from "react-native";
-
-
+import { useGetWeather } from "./src/hooks/useGetWather";
 
 const App = () => {
-  const [loading, setLoading] = useState(true)
-  const [location, setLocation] = useState(null)
-  const [error, setError] = useState(null)
 
-  useEffect( () => {
-    (async() => {
-      let { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== 'granted'){
-        setError('permission to access location was denied')
-        return
-      }
-      let location = await Location.getCurrentPositionAsync()
-      setLocation(location)
-    })()
-  }, [])
+  const [loading, error, weather] = useGetWeather()
 
-  if (loading) {
+  console.log(loading, error,weather)
+
+  if (!loading){
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size={'large'} color={'green'}></ActivityIndicator>
-      </View>
+      <NavigationContainer>
+        <Tabs weather={weather}></Tabs>
+      </NavigationContainer>
     )
   }
 
-
-
-  if (location) {
-    console.log(location)
-  }
   return (
-    <NavigationContainer>
-      <Tabs></Tabs>
-    </NavigationContainer>
-
+    <View style={styles.container}>
+      <ActivityIndicator size={'large'} color={'green'}></ActivityIndicator>
+    </View>
   )
+  
 }
 
 const styles = StyleSheet.create({

@@ -2,21 +2,27 @@ import React from "react";
 import {View, Text, SafeAreaView, StyleSheet} from 'react-native'
 import {Feather} from '@expo/vector-icons'
 
-const CurrentWeather = () => {
+const CurrentWeather = ({weather}) => {
+
+
+
   return (
     <SafeAreaView style={styles.wrapper}>
+      <View style={styles.top}>
+        <Text style={styles.temp}>{weather.name}</Text>
+      </View>
       <View style={styles.container}>
+
         <Feather name="sun" size={100} color="black" />
-        <Text style={styles.temp}>6</Text>
-        <Text style={styles.feels}>Feels like 5</Text>
+        <Text style={styles.temp}>{weather.main.temp}</Text>
+        <Text style={styles.feels}>Feels like {weather.main.feels_like}</Text>
         <View style={styles.high_low_wrapper}>
-          <Text style={styles.high_low}>High: 8</Text>
-          <Text style={styles.high_low}> Low: 6</Text>
+          <Text style={styles.high_low}>High: {weather.main.temp_max}</Text>
+          <Text style={styles.high_low}> Low: {weather.main.temp_min}</Text>
         </View>
         </View>
       <View style={styles.body_wrapper}>
-        <Text style={styles.description}>Its sunny</Text>
-        <Text style={styles.message}>Its perfect t-shirt weather</Text>
+        <Text style={styles.description}>{weather.weather[0].description}</Text>
       </View>
 
     </SafeAreaView>
@@ -25,8 +31,11 @@ const CurrentWeather = () => {
 
 
 const styles = StyleSheet.create({
+  top: {
+    flex: 1
+  },
   container:{
-    flex: 1,
+    flex: 5,
     alignItems: 'center',
     justifyContent: 'center'
   },
